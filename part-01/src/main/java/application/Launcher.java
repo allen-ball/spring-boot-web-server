@@ -10,16 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @NoArgsConstructor @ToString @Log4j2
 public class Launcher {
-
-    /**
-     * Standard {@link SpringApplication} {@code main(String[])} entry
-     * point.
-     *
-     * @param   argv            The command line argument vector.
-     *
-     * @throws  Exception       If the function does not catch
-     *                          {@link Exception}.
-     */
     public static void main(String[] argv) throws Exception {
         SpringApplication application = new SpringApplication(Launcher.class);
 
