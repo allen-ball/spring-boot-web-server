@@ -12,6 +12,9 @@
     <artifactId>spring-boot-dependencies</artifactId>
     <version>2.2.0.RELEASE</version>
   </parent>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <profiles>
     <profile>
       <id>spring-boot:run</id>
