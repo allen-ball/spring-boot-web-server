@@ -19,9 +19,9 @@
     <profile>
       <id>spring-boot:run</id>
       <properties>
-        <mdep.skip>true</mdep.skip>
         <maven.source.skip>true</maven.source.skip>
         <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.test.skip>true</maven.test.skip>
       </properties>
       <dependencies>
         <dependency>
@@ -36,7 +36,7 @@
         </dependency>
       </dependencies>
       <build>
-        <defaultGoal>clean package spring-boot:run</defaultGoal>
+        <defaultGoal>clean spring-boot:run</defaultGoal>
       </build>
     </profile>
   </profiles>
