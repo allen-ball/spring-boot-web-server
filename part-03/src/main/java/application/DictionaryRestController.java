@@ -2,6 +2,7 @@ package application;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
@@ -18,15 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @NoArgsConstructor @ToString @Log4j2
 public class DictionaryRestController {
     @Autowired private Map<String,String> dictionary = null;
-
-    @RequestMapping(method = { RequestMethod.GET }, value = { "/size" })
-    public int size(@RequestParam Map<String,String> parameters) {
-        if (! parameters.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-
-        return dictionary.size();
-    }
 
     @RequestMapping(method = { RequestMethod.GET }, value = { "/get" })
     public Optional<String> get(@RequestParam Map<String,String> parameters) {
@@ -52,5 +44,45 @@ public class DictionaryRestController {
         String result = dictionary.put(entry.getKey(), entry.getValue());
 
         return Optional.ofNullable(result);
+    }
+
+    @RequestMapping(method = { RequestMethod.GET }, value = { "/remove" })
+    public Optional<String> remove(@RequestParam Map<String,String> parameters) {
+        if (parameters.size() != 1) {
+            throw new IllegalArgumentException();
+        }
+
+        Map.Entry<String,String> entry =
+            parameters.entrySet().iterator().next();
+        String result = dictionary.remove(entry.getKey());
+
+        return Optional.ofNullable(result);
+    }
+
+    @RequestMapping(method = { RequestMethod.GET }, value = { "/size" })
+    public int size(@RequestParam Map<String,String> parameters) {
+        if (! parameters.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        return dictionary.size();
+    }
+
+    @RequestMapping(method = { RequestMethod.GET }, value = { "/entrySet" })
+    public Set<Map.Entry<String,String>> entrySet(@RequestParam Map<String,String> parameters) {
+        if (! parameters.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        return dictionary.entrySet();
+    }
+
+    @RequestMapping(method = { RequestMethod.GET }, value = { "/keySet" })
+    public Set<String> keySet(@RequestParam Map<String,String> parameters) {
+        if (! parameters.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        return dictionary.keySet();
     }
 }
