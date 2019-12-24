@@ -44,13 +44,13 @@ public class ClockController {
 
     @ModelAttribute
     public void addAttributesTo(Model model, Locale locale, HttpSession session) {
-        TimeZone zone = TimeZone.getDefault();
         String languageTag = (String) session.getAttribute("languageTag");
 
         if (languageTag != null) {
             locale = Locale.forLanguageTag(languageTag);
         }
 
+        TimeZone zone = TimeZone.getDefault();
         String zoneID = (String) session.getAttribute("zoneID");
 
         if (zoneID != null) {
