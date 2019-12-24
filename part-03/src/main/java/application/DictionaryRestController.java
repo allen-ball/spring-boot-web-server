@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = { "/dictionary" },
+@RequestMapping(value = { "/dictionary/" },
                 produces = MediaType.APPLICATION_JSON_VALUE)
 @NoArgsConstructor @ToString @Log4j2
 public class DictionaryRestController {
     @Autowired private Map<String,String> dictionary = null;
 
-    @RequestMapping(method = { RequestMethod.GET }, value = { "/get" })
+    @RequestMapping(method = { RequestMethod.GET }, value = { "get" })
     public Optional<String> get(@RequestParam Map<String,String> parameters) {
         if (parameters.size() != 1) {
             throw new IllegalArgumentException();
@@ -33,7 +33,7 @@ public class DictionaryRestController {
         return Optional.ofNullable(result);
     }
 
-    @RequestMapping(method = { RequestMethod.GET }, value = { "/put" })
+    @RequestMapping(method = { RequestMethod.GET }, value = { "put" })
     public Optional<String> put(@RequestParam Map<String,String> parameters) {
         if (parameters.size() != 1) {
             throw new IllegalArgumentException();
@@ -46,7 +46,7 @@ public class DictionaryRestController {
         return Optional.ofNullable(result);
     }
 
-    @RequestMapping(method = { RequestMethod.GET }, value = { "/remove" })
+    @RequestMapping(method = { RequestMethod.GET }, value = { "remove" })
     public Optional<String> remove(@RequestParam Map<String,String> parameters) {
         if (parameters.size() != 1) {
             throw new IllegalArgumentException();
@@ -59,7 +59,7 @@ public class DictionaryRestController {
         return Optional.ofNullable(result);
     }
 
-    @RequestMapping(method = { RequestMethod.GET }, value = { "/size" })
+    @RequestMapping(method = { RequestMethod.GET }, value = { "size" })
     public int size(@RequestParam Map<String,String> parameters) {
         if (! parameters.isEmpty()) {
             throw new IllegalArgumentException();
@@ -68,7 +68,7 @@ public class DictionaryRestController {
         return dictionary.size();
     }
 
-    @RequestMapping(method = { RequestMethod.GET }, value = { "/entrySet" })
+    @RequestMapping(method = { RequestMethod.GET }, value = { "entrySet" })
     public Set<Map.Entry<String,String>> entrySet(@RequestParam Map<String,String> parameters) {
         if (! parameters.isEmpty()) {
             throw new IllegalArgumentException();
@@ -77,7 +77,7 @@ public class DictionaryRestController {
         return dictionary.entrySet();
     }
 
-    @RequestMapping(method = { RequestMethod.GET }, value = { "/keySet" })
+    @RequestMapping(method = { RequestMethod.GET }, value = { "keySet" })
     public Set<String> keySet(@RequestParam Map<String,String> parameters) {
         if (! parameters.isEmpty()) {
             throw new IllegalArgumentException();
