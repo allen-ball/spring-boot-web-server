@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,10 +35,11 @@ public class ClockController {
         .collect(Collectors.toList());
 
     static {
-        LOCALES.sort(Comparator.comparing(t -> t.toLanguageTag()));
+        LOCALES.sort(Comparator.comparing(Locale::toLanguageTag));
         ZONES.sort(Comparator
-                   .<TimeZone>comparingInt(t -> t.getRawOffset())
-                   .thenComparingInt(t -> t.getDSTSavings()));
+                   .comparingInt(TimeZone::getRawOffset)
+                   .thenComparingInt(TimeZone::getDSTSavings)
+                   .thenComparing(TimeZone::getID));
     }
 
     @ModelAttribute
@@ -73,10 +75,10 @@ public class ClockController {
 
     @RequestMapping(method = { RequestMethod.POST }, value = { "time" })
     public String post(HttpServletRequest request, HttpSession session,
-                       @RequestParam("languageTag") String languageTag,
-                       @RequestParam("zoneID") String zoneID) {
-        session.setAttribute("languageTag", languageTag);
-        session.setAttribute("zoneID", zoneID);
+                       @RequestParam Map<String,String> form) {
+        form.entrySet()
+            .stream()
+            .forEach(t -> session.setAttribute(t.getKey(), t.getValue()));
 
         return "redirect:" + request.getServletPath();
     }

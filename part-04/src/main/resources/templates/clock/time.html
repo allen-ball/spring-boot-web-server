@@ -14,20 +14,22 @@
         <h1 class="text-center" th:text="${time.format(timestamp)}"/>
         <h1 class="text-center" th:text="${date.format(timestamp)}"/>
       </div>
-      <form class="row" th:method="'post'" th:action="${#request.servletPath}">
-        <select class="col-lg" th:name="languageTag">
+      <form class="row" method="post" th:action="${#request.servletPath}">
+        <select class="col-lg" name="languageTag">
           <option th:each="option : ${locales}"
-                  th:with="value = ${option.toLanguageTag()},
-                           display = ${option.getDisplayName(locale)}"
-                  th:selected="${option.equals(locale)}"
-                  th:value="${value}" th:text="${value + ' - ' + display}"/>
+                  th:with="selected = ${option.equals(locale)},
+                           value = ${option.toLanguageTag()},
+                           display = ${option.getDisplayName(locale)},
+                           text = ${value + ' - ' + display}"
+                  th:selected="${selected}" th:value="${value}" th:text="${text}"/>
         </select>
-        <select class="col-lg" th:name="zoneID">
+        <select class="col-lg" name="zoneID">
           <option th:each="option : ${zones}"
-                  th:with="value = ${option.ID},
-                           display = ${option.getDisplayName(locale)}"
-                  th:selected="${option.equals(zone)}"
-                  th:value="${value}" th:text="${value + ' - ' + display}"/>
+                  th:with="selected = ${option.equals(zone)},
+                           value = ${option.ID},
+                           display = ${option.getDisplayName(locale)},
+                           text = ${value + ' - ' + display}"
+                  th:selected="${selected}" th:value="${value}" th:text="${text}"/>
         </select>
         <button class="col-sm-1" type="submit" th:text="'&#8635;'"/>
       </form>
