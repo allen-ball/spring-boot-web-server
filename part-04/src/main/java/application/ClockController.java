@@ -44,6 +44,7 @@ public class ClockController {
 
     @ModelAttribute
     public void addAttributesTo(Model model, Locale locale, HttpSession session) {
+        TimeZone zone = TimeZone.getDefault();
         String languageTag = (String) session.getAttribute("languageTag");
 
         if (languageTag != null) {
@@ -51,21 +52,24 @@ public class ClockController {
         }
 
         String zoneID = (String) session.getAttribute("zoneID");
-        TimeZone zone =
-            (zoneID != null) ? TimeZone.getTimeZone(zoneID) : TimeZone.getDefault();
+
+        if (zoneID != null) {
+            zone = TimeZone.getTimeZone(zoneID);
+        }
 
         model.addAttribute("locales", LOCALES);
-        model.addAttribute("locale", locale);
         model.addAttribute("zones", ZONES);
+        model.addAttribute("locale", locale);
         model.addAttribute("zone", zone);
         model.addAttribute("date", DateFormat.getDateInstance(DateFormat.LONG, locale));
         model.addAttribute("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, locale));
         model.addAttribute("timestamp", new Date());
 
-        model.asMap().values()
-            .stream()
-            .filter(t -> t instanceof DateFormat)
-            .forEach(t -> ((DateFormat) t).setTimeZone(zone));
+        for (Object object : model.asMap().values()) {
+            if (object instanceof DateFormat) {
+                ((DateFormat) object).setTimeZone(zone);
+            }
+        }
     }
 
     @RequestMapping(method = { RequestMethod.GET }, value = { "time" })
