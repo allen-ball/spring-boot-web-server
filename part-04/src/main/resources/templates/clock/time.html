@@ -17,15 +17,17 @@
       <form class="row" th:method="'post'" th:action="${#request.servletPath}">
         <select class="col-lg" th:name="languageTag">
           <option th:each="option : ${locales}"
+                  th:with="value = ${option.toLanguageTag()},
+                           display = ${option.getDisplayName(locale)}"
                   th:selected="${option.equals(locale)}"
-                  th:value="${option.toLanguageTag()}"
-                  th:text="${option.toLanguageTag() + ' - ' + option.getDisplayName(locale)}"/>
+                  th:value="${value}" th:text="${value + ' - ' + display}"/>
         </select>
         <select class="col-lg" th:name="zoneID">
           <option th:each="option : ${zones}"
+                  th:with="value = ${option.ID},
+                           display = ${option.getDisplayName(locale)}"
                   th:selected="${option.equals(zone)}"
-                  th:value="${option.ID}"
-                  th:text="${option.ID + ' - ' + option.getDisplayName(locale)}"/>
+                  th:value="${value}" th:text="${value + ' - ' + display}"/>
         </select>
         <button class="col-sm-1" type="submit" th:text="'&#8635;'"/>
       </form>
