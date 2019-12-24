@@ -43,7 +43,7 @@ public class ClockController {
     }
 
     @ModelAttribute
-    public void addAttributes(Model model, HttpSession session, Locale locale) {
+    public void addAttributesTo(Model model, Locale locale, HttpSession session) {
         String languageTag = (String) session.getAttribute("languageTag");
 
         if (languageTag != null) {
