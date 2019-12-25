@@ -28,19 +28,16 @@ public class ClockController {
     private static final List<Locale> LOCALES =
         Stream.of(Locale.getAvailableLocales())
         .filter(t -> (! t.toString().equals("")))
+        .sorted(Comparator.comparing(Locale::toLanguageTag))
         .collect(Collectors.toList());
     private static final List<TimeZone> ZONES =
         Stream.of(TimeZone.getAvailableIDs())
         .map(t -> TimeZone.getTimeZone(t))
+        .sorted(Comparator
+                .comparingInt(TimeZone::getRawOffset)
+                .thenComparingInt(TimeZone::getDSTSavings)
+                .thenComparing(TimeZone::getID))
         .collect(Collectors.toList());
-
-    static {
-        LOCALES.sort(Comparator.comparing(Locale::toLanguageTag));
-        ZONES.sort(Comparator
-                   .comparingInt(TimeZone::getRawOffset)
-                   .thenComparingInt(TimeZone::getDSTSavings)
-                   .thenComparing(TimeZone::getID));
-    }
 
     @ModelAttribute
     public void addAttributesTo(Model model, Locale locale, HttpSession session) {
