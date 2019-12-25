@@ -52,4 +52,26 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <defaultGoal>clean package</defaultGoal>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <compilerArgs>
+              <arg>-Xlint:all,-path</arg>
+              <arg>-Xdoclint</arg>
+              <arg>-Xdoclint:-missing</arg>
+              <arg>-Xdoclint:-reference</arg>
+            </compilerArgs>
+            <debug>true</debug>
+            <debuglevel>source,lines,vars</debuglevel>
+            <parameters>true</parameters>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>
