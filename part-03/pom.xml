@@ -12,8 +12,10 @@
     <artifactId>spring-boot-dependencies</artifactId>
     <version>2.2.4.RELEASE</version>
   </parent>
+  <inceptionYear>2019</inceptionYear>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <license.licenseName>mit</license.licenseName>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
