@@ -6,5 +6,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface CredentialRepository extends JpaRepository<Credential,String> {
+public interface AuthorityRepository extends JpaRepository<Authority,String> {
 }

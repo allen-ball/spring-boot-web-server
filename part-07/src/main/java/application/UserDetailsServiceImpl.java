@@ -1,5 +1,8 @@
 package application;
 
+import application.Authorities;
+import application.jpa.Authority;
+import application.jpa.AuthorityRepository;
 import application.jpa.Credential;
 import application.jpa.CredentialRepository;
 import java.util.HashSet;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @NoArgsConstructor @ToString @Log4j2
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired private CredentialRepository credentialRepository = null;
+    @Autowired private AuthorityRepository authorityRepository = null;
 
     @Override
     @Transactional(readOnly = true)
@@ -28,18 +32,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = null;
 
         try {
-log.info("{}", username);
-            Optional<Credential> credential =
-                credentialRepository.findById(username);
-log.info("{}", credential);
+            Optional<Credential> credential = credentialRepository.findById(username);
+            Optional<Authority> authority = authorityRepository.findById(username);
             HashSet<GrantedAuthority> set = new HashSet<>();
-/*
-            subscriberRepository.findById(username)
-                .ifPresent(t -> set.add(new SimpleGrantedAuthority("SUBSCRIBER")));
 
-            authorRepository.findById(username)
-                .ifPresent(t -> set.add(new SimpleGrantedAuthority("AUTHOR")));
-*/
+            if (authority.isPresent()) {
+                authority.get().getGrants().stream()
+                    .map(Authorities::name)
+                    .map(SimpleGrantedAuthority::new)
+                    .forEach(set::add);
+            }
+
             user = new User(username, credential.get().getPassword(), set);
         } catch (UsernameNotFoundException exception) {
             throw exception;

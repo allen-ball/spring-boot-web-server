@@ -73,6 +73,21 @@
     </profile>
     <profile>
       <id>mysql</id>
+      <repositories>
+        <repository>
+          <id>repo.hcf.dev-RELEASE</id>
+          <name>hcf.dev RELEASE Repository</name>
+          <url>https://repo.hcf.dev/maven/release/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
       <dependencies>
         <dependency>
           <groupId>ball</groupId>

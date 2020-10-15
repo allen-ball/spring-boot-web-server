@@ -28,6 +28,16 @@
           <div th:ref="navbar-menu">
             <ul th:ref="navbar-start"></ul>
             <ul th:ref="navbar-end">
+              <li th:ref="navbar-item" sec:authorize="hasAuthority('ADMINISTRATOR')">
+                <button th:text="'Administrator'" th:disabled="${true}"/>
+                <ul th:ref="navbar-dropdown">
+                </ul>
+              </li>
+              <li th:ref="navbar-item" sec:authorize="hasAuthority('USER')">
+                <button th:text="'User'" th:disabled="${true}"/>
+                <ul th:ref="navbar-dropdown">
+                </ul>
+              </li>
               <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
                 <a th:text="'Login'" th:href="@{/login}"/>
               </li>
