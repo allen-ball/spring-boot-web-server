@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: forvm.th.xml 6781 2020-09-19 22:58:08Z ball $ -->
+<thlogic>
+  <attr sel="body">
+    <attr sel="header"
+          th:class="'fixed-top text-white bg-dark navbar navbar-dark'">
+      <attr sel="%navbar" th:class="'container navbar-expand-md'">
+        <attr sel="%navbar-brand//a" th:class="'navbar-brand'"/>
+        <attr sel="%navbar-menu">
+          <attr sel="%navbar-start" th:if="${false}"/>
+          <attr sel="%navbar-end"
+                th:class="'navbar-nav text-white bg-dark'"/>
+          <attr sel="%navbar-item" th:class="'navbar-item dropdown'"/>
+          <attr sel="%navbar-item/a" th:class="'btn navbar-link'"/>
+          <attr sel="%navbar-item/button"
+                th:class="'btn dropdown-toggle'"
+                th:data-toggle="'dropdown'"
+                th:aria-controls="${#ids.next('dropdown')}"
+                th:aria-haspopup="true"/>
+          <attr sel="%navbar-dropdown"
+                th:id="${#ids.seq('dropdown')}"
+                th:class="'dropdown-menu'"/>
+          <attr sel="%navbar-item/%navbar-dropdown/li"
+                th:class="'nav-item dropdown'"/>
+          <attr sel="%navbar-item/%navbar-dropdown/li/a"
+                th:class="'btn dropdown-link dropdown-item'"/>
+
+          <attr sel="a" th:classappend="'text-white bg-dark'"/>
+          <attr sel="button" th:classappend="'text-white bg-dark'"/>
+          <attr sel="%navbar-dropdown" th:classappend="'text-white bg-dark'"/>
+        </attr>
+      </attr>
+    </attr>
+    <attr sel="main" th:class="'container'">
+      <attr sel="table" th:class="'table table-striped'">
+        <attr sel="/tbody">
+          <attr sel="/tr" th:class="'row'"/>
+        </attr>
+      </attr>
+    </attr>
+    <attr sel="footer" th:class="'fixed-bottom text-white bg-dark'">
+      <attr sel="%navbar" th:class="'navbar navbar-dark'">
+        <attr sel="div%container" th:class="'container'"/>
+        <attr sel="%left" th:class="'col-sm text-left'"/>
+        <attr sel="%center" th:class="'col-sm-3 text-center'"/>
+        <attr sel="%right" th:class="'col-sm text-right'"/>
+
+        <attr sel="a" th:class="'btn btn-link'"/>
+      </attr>
+    </attr>
+  </attr>
+</thlogic>

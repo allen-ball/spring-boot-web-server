@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thlogic>
+  <attr sel="/div" th:class="'jumbotron'">
+    <attr sel="/div" th:class="'row justify-content-center'">
+      <attr sel="/div" th:class="'col-sm-6'"/>
+    </attr>
+  </attr>
+  <attr sel="form" th:method="'post'" th:action="${#request.servletPath}">
+    <attr sel="input" th:class="'form-control'" th:id="${#ids.seq('input')}"/>
+    <attr sel="input[type='file']" th:classappend="'form-control-file'"/>
+    <attr sel="input[type!='hidden']" required autofocus/>
+    <attr sel="label" th:class="'sr-only'" th:for="${#ids.prev('input')}"/>
+    <attr sel="button" th:class="'btn btn-lg btn-primary btn-block'"/>
+  </attr>
+</thlogic>

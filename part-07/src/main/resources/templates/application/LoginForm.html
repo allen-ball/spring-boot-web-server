@@ -1,0 +1,19 @@
+<div>
+  <div>
+    <div>
+      <form th:object="${form}">
+        <input type="email" th:name="username" th:placeholder="'E\'mail Address'"/>
+        <label th:text="'E\'mail Address'"/>
+        <input type="password" th:name="password" th:placeholder="'Password'"/>
+        <label th:text="'Password'"/>
+        <button type="submit" th:text="'Login'"/>
+      </form>
+    </div>
+  </div>
+  <div>
+    <div>
+      <p th:if="${param.error}">Invalid username and password.</p>
+      <p th:if="${param.logout}">You have been logged out.</p>
+    </div>
+  </div>
+</div>

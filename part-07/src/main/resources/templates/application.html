@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:xmlns="@{http://www.w3.org/1999/xhtml}">
+  <head>
+    <meta charset="UTF-8"/>
+    <title th:if="${title != null}" th:text="${title}"/>
+    <meta th:if="${description != null}" name="description" th:content="${description}"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.css}"/>
+    <style>
+      body { padding-top: 60px; margin-bottom: 60px; }
+      @media (max-width: 979px) { body { padding-top: 0px; } }
+    </style>
+  </head>
+  <body>
+<!--[if lte IE 9]>
+    <p class="browserupgrade">
+      You are using an <strong>outdated</strong> browser.  Please
+      <a href="https://browsehappy.com/">upgrade your browser</a> to improve
+      your experience and security.
+    </p>
+<![endif]-->
+    <header>
+      <nav th:ref="navbar">
+        <th:block th:ref="container">
+          <div th:ref="navbar-brand">
+            <a th:text="${#strings.defaultString(brand, 'Home')}" th:href="@{/}"/>
+          </div>
+          <div th:ref="navbar-menu">
+            <ul th:ref="navbar-start"></ul>
+            <ul th:ref="navbar-end">
+              <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
+                <a th:text="'Login'" th:href="@{/login}"/>
+              </li>
+              <li th:ref="navbar-item" sec:authorize="isAuthenticated()">
+                <button sec:authentication="name"/>
+                <ul th:ref="navbar-dropdown">
+                  <li><a th:text="'Logout'" th:href="@{/logout}"/></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </th:block>
+      </nav>
+    </header>
+    <main th:unless="${#ctx.containsVariable('exception')}"
+          th:switch="${#request.servletPath}">
+      <section th:case="'/error'">
+        <h1 th:text="${#request.getAttribute('javax.servlet.error.request_uri')}"/>
+        <h2 th:text="${#request.getAttribute('javax.servlet.error.status_code')}"/>
+        <p th:text="${#request.getAttribute('javax.servlet.error.message')}"/>
+      </section>
+      <section th:case="*">
+        <th:block th:if="${#ctx.containsVariable('form')}">
+          <th:block th:insert="~{${#execInfo.templateName + '/' + form.class.simpleName}}"/>
+        </th:block>
+        <p th:if="${#ctx.containsVariable('exception')}" th:text="${exception}"/>
+      </section>
+    </main>
+    <main th:if="${#ctx.containsVariable('exception')}">
+      <section>
+        <h1 th:text="${#request.getAttribute('javax.servlet.error.request_uri')}"/>
+        <p th:text="${exception.message}"/>
+      </section>
+    </main>
+    <footer>
+      <nav th:ref="navbar">
+        <div th:ref="container">
+          <span th:ref="left" th:text="${#request.servletPath}"/>
+          <span th:ref="center"/>
+          <span th:ref="right">
+            <th:block sec:authorize="isAuthenticated()">
+              <span sec:authentication="authorities"/>
+            </th:block>
+          </span>
+        </div>
+      </nav>
+    </footer>
+    <script th:src="@{/webjars/jquery/jquery.js}" th:text="''"/>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}" th:text="''"/>
+  </body>
+</html>

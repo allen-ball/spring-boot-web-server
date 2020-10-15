@@ -8,3 +8,4 @@
 | [4](part-04)                              | [Spring MVC with Thymeleaf](https://blog.hcf.dev/article/2020-01-01-spring-boot-part-04/)                  |
 | [5](https://github.com/allen-ball/voyeur) | [voyeur, A Non-Trivial Application](https://blog.hcf.dev/article/2020-06-26-spring-boot-part-05/)          |
 | 6                                         | [Auto Configuration and Starters](https://blog.hcf.dev/article/2020-07-19-spring-boot-part-06/)            |
+| [7](part-07)                              | Spring Security, Login, and Oauth2                                                                         |
