@@ -95,6 +95,7 @@
               <arg>-Xdoclint</arg>
               <arg>-Xdoclint:-missing</arg>
               <arg>-Xdoclint:-reference</arg>
+              <arg>-Xpkginfo:always</arg>
             </compilerArgs>
             <debug>true</debug>
             <debuglevel>source,lines,vars</debuglevel>
