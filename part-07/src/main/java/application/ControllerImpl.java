@@ -1,5 +1,7 @@
 package application;
 
+import org.springframework.security.core.session.SessionRegistry;
+import java.security.Principal;
 import application.jpa.Credential;
 import application.jpa.CredentialRepository;
 import javax.annotation.PostConstruct;
@@ -30,11 +32,14 @@ public class ControllerImpl {
 
     private static final String EXCEPTION = "exception";
     private static final String FORM = "form";
+    private static final String PRINCIPAL = "principal";
+    private static final String PRINCIPALS = "principals";
 
     @Autowired private SpringTemplateEngine engine = null;
     @Autowired private SpringResourceTemplateResolver resolver = null;
     @Autowired private CredentialRepository credentialRepository = null;
     @Autowired private PasswordEncoder encoder = null;
+    @Autowired private SessionRegistry registry = null;
 
     @PostConstruct
     public void init() { resolver.setUseDecoupledLogic(true); }
@@ -91,6 +96,22 @@ public class ControllerImpl {
             model.addAttribute(FORM, form);
             model.addAttribute(EXCEPTION, exception);
         }
+
+        return VIEW;
+    }
+
+    @RequestMapping(value = { "/who-am-i" })
+    @PreAuthorize("hasAuthority('USER')")
+    public String whoAmI(Model model, Principal principal) {
+        model.addAttribute(PRINCIPAL, principal);
+
+        return VIEW;
+    }
+
+    @RequestMapping(value = { "/who" })
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public String who(Model model) {
+        model.addAttribute(PRINCIPALS, registry.getAllPrincipals());
 
         return VIEW;
     }

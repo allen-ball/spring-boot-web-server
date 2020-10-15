@@ -29,13 +29,15 @@
             <ul th:ref="navbar-start"></ul>
             <ul th:ref="navbar-end">
               <li th:ref="navbar-item" sec:authorize="hasAuthority('ADMINISTRATOR')">
-                <button th:text="'Administrator'" th:disabled="${true}"/>
+                <button th:text="'Administrator'"/>
                 <ul th:ref="navbar-dropdown">
+                  <li><a th:text="'Who'" th:href="@{/who}"/></li>
                 </ul>
               </li>
               <li th:ref="navbar-item" sec:authorize="hasAuthority('USER')">
-                <button th:text="'User'" th:disabled="${true}"/>
+                <button th:text="'User'"/>
                 <ul th:ref="navbar-dropdown">
+                  <li><a th:text="'Who Am I?'" th:href="@{/who-am-i}"/></li>
                 </ul>
               </li>
               <li th:ref="navbar-item" sec:authorize="!isAuthenticated()">
@@ -55,6 +57,18 @@
     </header>
     <main th:unless="${#ctx.containsVariable('exception')}"
           th:switch="${#request.servletPath}">
+      <section th:case="'/who'">
+        <table>
+          <tbody>
+            <tr th:each="principal : ${principals}">
+              <td th:text="${principal}"/>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section th:case="'/who-am-i'">
+        <p th:text="${principal}"/>
+      </section>
       <section th:case="'/error'">
         <h1 th:text="${#request.getAttribute('javax.servlet.error.request_uri')}"/>
         <h2 th:text="${#request.getAttribute('javax.servlet.error.status_code')}"/>

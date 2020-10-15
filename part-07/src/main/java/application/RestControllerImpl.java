@@ -4,8 +4,11 @@ import java.security.Principal;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +20,17 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping(value = { "/api/" }, produces = APPLICATION_JSON_VALUE)
 @NoArgsConstructor @ToString @Log4j2
 public class RestControllerImpl {
-    @RequestMapping(method = { GET }, value = { "/who" })
-    public ResponseEntity<String> who(Principal principal) throws Exception {
-        return new ResponseEntity<>(HttpStatus.OK);
+    @Autowired private SessionRegistry registry = null;
+
+    @RequestMapping(method = { GET }, value = { "who-am-i" })
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Object> whoAmI(Principal principal) throws Exception {
+        return new ResponseEntity<>(principal, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = { GET }, value = { "who" })
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<Object> who() throws Exception {
+        return new ResponseEntity<>(registry.getAllPrincipals(), HttpStatus.OK);
     }
 }
