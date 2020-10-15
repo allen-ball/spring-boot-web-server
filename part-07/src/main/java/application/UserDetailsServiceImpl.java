@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @NoArgsConstructor @ToString @Log4j2
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired private CredentialRepository credentialRepository;
+    @Autowired private CredentialRepository credentialRepository = null;
 
     @Override
     @Transactional(readOnly = true)

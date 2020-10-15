@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: forvm.th.xml 6781 2020-09-19 22:58:08Z ball $ -->
 <thlogic>
   <attr sel="body">
     <attr sel="header"
