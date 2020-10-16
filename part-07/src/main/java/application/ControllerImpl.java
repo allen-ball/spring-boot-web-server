@@ -31,6 +31,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
+@RequestMapping(value = { "/" })
 @NoArgsConstructor @ToString @Log4j2
 public class ControllerImpl implements ErrorController {
     private static final String VIEW = ControllerImpl.class.getPackage().getName();
@@ -53,14 +54,14 @@ public class ControllerImpl implements ErrorController {
         return VIEW;
     }
 
-    @RequestMapping(method = { GET }, value = { "/login" })
+    @RequestMapping(method = { GET }, value = { "login" })
     public String login(Model model, HttpSession session) {
         model.addAttribute("form", new LoginForm());
 
         return VIEW;
     }
 
-    @RequestMapping(method = { GET }, value = { "/password" })
+    @RequestMapping(method = { GET }, value = { "password" })
     @PreAuthorize("isAuthenticated()")
     public String password(Model model) {
         model.addAttribute("form", new ChangePasswordForm());
@@ -68,7 +69,7 @@ public class ControllerImpl implements ErrorController {
         return VIEW;
     }
 
-    @RequestMapping(method = { POST }, value = { "/password" })
+    @RequestMapping(method = { POST }, value = { "password" })
     @PreAuthorize("isAuthenticated()")
     public String passwordPOST(Model model,
                                @Valid ChangePasswordForm form,
@@ -101,7 +102,7 @@ public class ControllerImpl implements ErrorController {
         return VIEW;
     }
 
-    @RequestMapping(value = { "/who-am-i" })
+    @RequestMapping(value = { "who-am-i" })
     @PreAuthorize("hasAuthority('USER')")
     public String whoAmI(Model model, Principal principal) {
         model.addAttribute("principal", principal);
@@ -109,7 +110,7 @@ public class ControllerImpl implements ErrorController {
         return VIEW;
     }
 
-    @RequestMapping(value = { "/who" })
+    @RequestMapping(value = { "who" })
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public String who(Model model) {
         model.addAttribute("principals", registry.getAllPrincipals());
