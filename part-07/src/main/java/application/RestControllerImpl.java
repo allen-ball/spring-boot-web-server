@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,5 +33,26 @@ public class RestControllerImpl {
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<Object> who() throws Exception {
         return new ResponseEntity<>(registry.getAllPrincipals(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler({ SecurityException.class })
+    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Forbidden")
+    public void handleFORBIDDEN() { }
+
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public static class ConflictException extends RuntimeException {
+        private ConflictException(String message) { super(message, null); }
+    }
+
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public static class ForbiddenException extends RuntimeException {
+        private ForbiddenException(String message) { super(message, null); }
+    }
+
+    @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+    public static class MethodNotAllowedException extends RuntimeException {
+        private MethodNotAllowedException(String message) {
+            super(message, null);
+        }
     }
 }
