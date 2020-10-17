@@ -74,8 +74,7 @@ public class ControllerImpl implements ErrorController {
                 throw new RuntimeException(String.valueOf(result.getAllErrors()));
             }
 
-            if (! (form.getNewPassword() != null
-                   && form.getNewPassword().equals(form.getRepeatPassword()))) {
+            if (! (form.getNewPassword() != null && form.getNewPassword().equals(form.getRepeatPassword()))) {
                 throw new RuntimeException("Repeated password does not match new password");
             }
 

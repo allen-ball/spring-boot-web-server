@@ -2,6 +2,7 @@ package application.jpa;
 
 import application.Authorities;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -26,8 +27,8 @@ public class AuthoritiesSet extends TreeSet<Authorities> {
             AuthoritiesSet set =
                 Stream.of(string.split(","))
                 .map(String::trim)
-                .filter(t -> (! t.isEmpty()))
-                .map(t -> Authorities.valueOf(t))
+                .filter(Predicate.not(String::isEmpty))
+                .map(Authorities::valueOf)
                 .collect(toCollection(AuthoritiesSet::new));
 
             return set;
