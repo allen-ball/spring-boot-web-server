@@ -22,7 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -36,8 +35,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ControllerImpl implements ErrorController {
     private static final String VIEW = ControllerImpl.class.getPackage().getName();
 
-    @Value("${server.error.path:${error.path:/error}}") private String errorPath = null;
-    @Autowired private SpringTemplateEngine engine = null;
     @Autowired private SpringResourceTemplateResolver resolver = null;
     @Autowired private CredentialRepository credentialRepository = null;
     @Autowired private PasswordEncoder encoder = null;
@@ -71,9 +68,7 @@ public class ControllerImpl implements ErrorController {
 
     @RequestMapping(method = { POST }, value = { "password" })
     @PreAuthorize("isAuthenticated()")
-    public String passwordPOST(Model model,
-                               @Valid ChangePasswordForm form,
-                               BindingResult result) {
+    public String passwordPOST(Model model, @Valid ChangePasswordForm form, BindingResult result) {
         try {
             if (result.hasErrors()) {
                 throw new RuntimeException(String.valueOf(result.getAllErrors()));
@@ -84,8 +79,7 @@ public class ControllerImpl implements ErrorController {
                 throw new RuntimeException("Repeated password does not match new password");
             }
 
-            Credential credential =
-                credentialRepository.findById(form.getUsername()).get();
+            Credential credential = credentialRepository.findById(form.getUsername()).get();
 
             if (! encoder.matches(form.getPassword(), credential.getPassword())) {
                 throw new RuntimeException("Invalid password");
@@ -128,6 +122,9 @@ public class ControllerImpl implements ErrorController {
 
         return VIEW;
     }
+
+    @Value("${server.error.path:${error.path:/error}}")
+    private String errorPath = null;
 
     @Deprecated @Override
     public String getErrorPath() { return errorPath; }
