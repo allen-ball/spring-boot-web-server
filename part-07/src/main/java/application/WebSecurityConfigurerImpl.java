@@ -75,8 +75,7 @@ public abstract class WebSecurityConfigurerImpl extends WebSecurityConfigurerAda
                 .formLogin(t -> t.loginPage("/login").permitAll())
                 .logout(t -> t.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                               .logoutSuccessUrl("/").permitAll());
-            http.sessionManagement(t -> t.maximumSessions(-1)
-                                         .sessionRegistry(sessionRegistry()));
+            http.sessionManagement(t -> t.maximumSessions(-1).sessionRegistry(sessionRegistry()));
         }
     }
 }
