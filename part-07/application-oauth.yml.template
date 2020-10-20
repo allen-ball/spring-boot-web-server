@@ -1,0 +1,16 @@
+---
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: XXXXXXXXXXXXXXXXXXXX
+            client-secret: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+          okta:
+            client-id: XXXXXXXXXXXXXXXXXXXX
+            client-secret: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            client-name: Okta
+        provider:
+          okta:
+            issuer-uri: https://DOMAIN.okta.com/oauth2/default

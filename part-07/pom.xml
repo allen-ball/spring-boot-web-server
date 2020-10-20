@@ -63,7 +63,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
             <configuration>
-              <profiles>
+              <profiles combine.children="append">
                 <profile>hsqldb</profile>
               </profiles>
             </configuration>
@@ -101,8 +101,37 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
             <configuration>
-              <profiles>
+              <profiles combine.children="append">
                 <profile>mysql</profile>
+              </profiles>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>oauth</id>
+      <activation>
+        <file><exists>${basedir}/application-oauth.yml</exists></file>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+              <profiles combine.children="append">
+                <profile>oauth</profile>
               </profiles>
             </configuration>
           </plugin>
@@ -134,14 +163,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-oauth2-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-oauth2-jose</artifactId>
     </dependency>
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
