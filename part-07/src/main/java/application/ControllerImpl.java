@@ -68,8 +68,12 @@ public class ControllerImpl implements ErrorController {
 
     @RequestMapping(method = { POST }, value = { "password" })
     @PreAuthorize("isAuthenticated()")
-    public String passwordPOST(Model model, @Valid ChangePasswordForm form, BindingResult result) {
+    public String passwordPOST(Model model, Principal principal, @Valid ChangePasswordForm form, BindingResult result) {
         try {
+            if (! principal.getName().equals(form.getUsername())) {
+                throw new RuntimeException("User name does not match Principal");
+            }
+
             if (result.hasErrors()) {
                 throw new RuntimeException(String.valueOf(result.getAllErrors()));
             }
@@ -78,10 +82,14 @@ public class ControllerImpl implements ErrorController {
                 throw new RuntimeException("Repeated password does not match new password");
             }
 
-            Credential credential = credentialRepository.findById(form.getUsername()).get();
+            Credential credential = credentialRepository.findById(principal.getName()).get();
 
             if (! encoder.matches(form.getPassword(), credential.getPassword())) {
                 throw new RuntimeException("Invalid password");
+            }
+
+            if (encoder.matches(form.getNewPassword(), credential.getPassword())) {
+                throw new RuntimeException("New password must be different than old");
             }
 
             credential.setPassword(encoder.encode(form.getNewPassword()));
