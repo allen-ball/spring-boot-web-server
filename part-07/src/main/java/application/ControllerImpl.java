@@ -3,6 +3,7 @@ package application;
 import application.jpa.Credential;
 import application.jpa.CredentialRepository;
 import java.security.Principal;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;
@@ -13,6 +14,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -69,23 +72,23 @@ public class ControllerImpl implements ErrorController {
     @RequestMapping(method = { POST }, value = { "password" })
     @PreAuthorize("isAuthenticated()")
     public String passwordPOST(Model model, Principal principal, @Valid ChangePasswordForm form, BindingResult result) {
-        try {
-            if (! principal.getName().equals(form.getUsername())) {
-                throw new RuntimeException("User name does not match Principal");
-            }
+        Credential credential =
+            credentialRepository.findById(principal.getName())
+            .orElseThrow(() -> new AuthorizationServiceException("Unauthorized"));
 
+        try {
             if (result.hasErrors()) {
                 throw new RuntimeException(String.valueOf(result.getAllErrors()));
             }
 
-            if (! (form.getNewPassword() != null && form.getNewPassword().equals(form.getRepeatPassword()))) {
-                throw new RuntimeException("Repeated password does not match new password");
+            if (! (Objects.equals(form.getUsername(), principal.getName())
+                   && encoder.matches(form.getPassword(), credential.getPassword()))) {
+                throw new AccessDeniedException("Invalid user name and password");
             }
 
-            Credential credential = credentialRepository.findById(principal.getName()).get();
-
-            if (! encoder.matches(form.getPassword(), credential.getPassword())) {
-                throw new RuntimeException("Invalid password");
+            if (! (form.getNewPassword() != null
+                   && Objects.equals(form.getNewPassword(), form.getRepeatPassword()))) {
+                throw new RuntimeException("Repeated password does not match new password");
             }
 
             if (encoder.matches(form.getNewPassword(), credential.getPassword())) {
@@ -93,11 +96,10 @@ public class ControllerImpl implements ErrorController {
             }
 
             credential.setPassword(encoder.encode(form.getNewPassword()));
-
             credentialRepository.save(credential);
         } catch (Exception exception) {
             model.addAttribute("form", form);
-            model.addAttribute("exception", exception);
+            model.addAttribute("errors", exception.getMessage());
         }
 
         return VIEW;

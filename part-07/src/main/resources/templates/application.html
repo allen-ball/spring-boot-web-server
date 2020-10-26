@@ -67,7 +67,7 @@
         </table>
       </section>
       <section th:case="'/who-am-i'">
-        <p th:text="${principal}"/>
+        <p th:text="${principal}"/><!--/* <p th:text="${#authentication}"/> */-->
       </section>
       <section th:case="'/error'">
         <h1 th:text="${#request.getAttribute('javax.servlet.error.request_uri')}"/>
@@ -77,8 +77,8 @@
       <section th:case="*">
         <th:block th:if="${#ctx.containsVariable('form')}">
           <th:block th:insert="~{${#execInfo.templateName + '/' + form.class.simpleName}}"/>
+          <p th:if="${#ctx.containsVariable('errors')}" th:text="${errors}"/>
         </th:block>
-        <p th:if="${#ctx.containsVariable('exception')}" th:text="${exception}"/>
       </section>
     </main>
     <main th:if="${#ctx.containsVariable('exception')}">
