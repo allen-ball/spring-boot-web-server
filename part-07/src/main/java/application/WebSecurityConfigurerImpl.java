@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -73,6 +74,7 @@ public abstract class WebSecurityConfigurerImpl extends WebSecurityConfigurerAda
             http.antMatcher("/**")
                 .authorizeRequests(t -> t.anyRequest().authenticated())
                 .formLogin(t -> t.loginPage("/login").permitAll())
+                /* .oauth2Login(Customizer.withDefaults()) */
                 .logout(t -> t.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                               .logoutSuccessUrl("/").permitAll());
             http.sessionManagement(t -> t.maximumSessions(-1).sessionRegistry(sessionRegistry()));
