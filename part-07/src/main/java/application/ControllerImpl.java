@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -63,7 +62,11 @@ public class ControllerImpl implements ErrorController {
 
     @RequestMapping(method = { GET }, value = { "password" })
     @PreAuthorize("isAuthenticated()")
-    public String password(Model model) {
+    public String password(Model model, Principal principal) {
+        Credential credential =
+            credentialRepository.findById(principal.getName())
+            .orElseThrow(() -> new AuthorizationServiceException("Unauthorized"));
+
         model.addAttribute("form", new ChangePasswordForm());
 
         return VIEW;
