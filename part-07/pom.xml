@@ -112,18 +112,8 @@
     <profile>
       <id>oauth</id>
       <activation>
-        <file><exists>${basedir}/application-oauth.yml</exists></file>
+        <!-- <file><exists>${basedir}/application-oauth.yml</exists></file> -->
       </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.springframework.security</groupId>
-          <artifactId>spring-security-oauth2-client</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.springframework.security</groupId>
-          <artifactId>spring-security-oauth2-jose</artifactId>
-        </dependency>
-      </dependencies>
       <build>
         <plugins>
           <plugin>
@@ -140,6 +130,11 @@
     </profile>
   </profiles>
   <dependencies verbose="true">
+    <dependency>
+      <groupId>com.okta.spring</groupId>
+      <artifactId>okta-spring-boot-starter</artifactId>
+      <version>1.4.0</version>
+    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -163,6 +158,14 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-oauth2-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-oauth2-jose</artifactId>
     </dependency>
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
