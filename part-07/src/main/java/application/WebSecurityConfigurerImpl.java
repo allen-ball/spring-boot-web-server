@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +18,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -74,9 +74,20 @@ public abstract class WebSecurityConfigurerImpl extends WebSecurityConfigurerAda
             http.antMatcher("/**")
                 .authorizeRequests(t -> t.anyRequest().authenticated())
                 .formLogin(t -> t.loginPage("/login").permitAll())
-                /* .oauth2Login(Customizer.withDefaults()) */
                 .logout(t -> t.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                               .logoutSuccessUrl("/").permitAll());
+
+            try {
+                ClientRegistrationRepository repository =
+                    getApplicationContext().getBean(ClientRegistrationRepository.class);
+
+                if (repository != null) {
+                    http.oauth2Login(t -> t.clientRegistrationRepository(repository)
+                                           .loginPage("/login").permitAll());
+                }
+            } catch (Exception exception) {
+            }
+
             http.sessionManagement(t -> t.maximumSessions(-1).sessionRegistry(sessionRegistry()));
         }
     }
