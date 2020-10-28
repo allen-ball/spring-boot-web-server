@@ -43,7 +43,9 @@
               <li th:ref="navbar-item" sec:authorize="isAuthenticated()">
                 <button sec:authentication="name"/>
                 <ul th:ref="navbar-dropdown">
-                  <li><a th:text="'Change Password'" th:href="@{/password}"/></li>
+                  <li th:if="${isPasswordAuthenticated}">
+                    <a th:text="'Change Password'" th:href="@{/password}"/>
+                  </li>
                   <li><a th:text="'Logout'" th:href="@{/logout}"/></li>
                 </ul>
               </li>

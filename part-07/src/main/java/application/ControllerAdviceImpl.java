@@ -56,8 +56,8 @@ public class ControllerAdviceImpl {
         return oauth2;
     }
 
-    @ModelAttribute("hasPassword")
-    public boolean hasPassword(Principal principal) {
+    @ModelAttribute("isPasswordAuthenticated")
+    public boolean isPasswordAuthenticated(Principal principal) {
         return principal instanceof UsernamePasswordAuthenticationToken;
     }
 }
