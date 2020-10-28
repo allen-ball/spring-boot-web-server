@@ -7,6 +7,10 @@
         <input type="password" th:name="password" th:placeholder="'Password'"/>
         <label th:text="'Password'"/>
         <button type="submit" th:text="'Login'"/>
+        <th:block th:if="${! oauth2.isEmpty()}">
+          <hr/>
+          <a th:each="client : ${oauth2}" th:href="@{/oauth2/authorization/{id}(id=${client.registrationId})}" th:text="${client.clientName}"/>
+        </th:block>
       </form>
     </div>
   </div>

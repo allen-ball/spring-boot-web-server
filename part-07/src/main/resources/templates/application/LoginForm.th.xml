@@ -11,5 +11,6 @@
     <attr sel="input[type!='hidden']" required autofocus/>
     <attr sel="label" th:class="'sr-only'" th:for="${#ids.prev('input')}"/>
     <attr sel="button" th:class="'btn btn-lg btn-primary btn-block'"/>
+    <attr sel="a" th:class="'btn btn-lg btn-primary btn-block'"/>
   </attr>
 </thlogic>
