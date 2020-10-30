@@ -1,11 +1,9 @@
 package application;
 
-import application.Authorities;
 import application.jpa.Authority;
 import application.jpa.AuthorityRepository;
 import application.jpa.Credential;
 import application.jpa.CredentialRepository;
-import java.util.HashSet;
 import java.util.Optional;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,8 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,16 +39,12 @@ public class UserDetailsServiceConfiguration {
             try {
                 Optional<Credential> credential = credentialRepository.findById(username);
                 Optional<Authority> authority = authorityRepository.findById(username);
-                HashSet<GrantedAuthority> set = new HashSet<>();
 
-                if (authority.isPresent()) {
-                    authority.get().getGrants().stream()
-                        .map(Authorities::name)
-                        .map(SimpleGrantedAuthority::new)
-                        .forEach(set::add);
-                }
-
-                user = new User(username, credential.get().getPassword(), set);
+                user =
+                    new User(username,
+                             credential.get().getPassword(),
+                             authority.map(t -> t.getGrants().asGrantedAuthorityList())
+                             .orElse(AuthorityUtils.createAuthorityList()));
             } catch (UsernameNotFoundException exception) {
                 throw exception;
             } catch (Exception exception) {
