@@ -16,11 +16,14 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +39,7 @@ public class UserServicesConfiguration {
     }
 
     @Bean
-    public OAuth2UserService<OAuth2UserRequest,OAuth2User> oauth2UserService() {
+    public OAuth2UserService<OAuth2UserRequest,OAuth2User> oAuth2UserService() {
         return new OAuth2UserServiceImpl();
     }
 
@@ -79,7 +82,15 @@ public class UserServicesConfiguration {
         public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException {
             OAuth2User user = delegate.loadUser(request);
 
-            log.info("{}", user);
+            /* log.info("{}", request.getAccessToken().getTokenValue()); */
+
+            try {
+                Optional<Authority> authority = authorityRepository.findById(user.getName());
+            } catch (OAuth2AuthenticationException exception) {
+                throw exception;
+            } catch (Exception exception) {
+                log.info("{}", request, exception);
+            }
 
             return user;
         }
@@ -87,6 +98,13 @@ public class UserServicesConfiguration {
 
     @NoArgsConstructor @ToString
     private class OidcUserServiceImpl extends OidcUserService {
-        { setOauth2UserService(oauth2UserService()); }
+        { setOauth2UserService(oAuth2UserService()); }
+
+        @Override
+        public OidcUser loadUser(OidcUserRequest request) throws OAuth2AuthenticationException {
+            OidcUser super.loadUser(request);
+
+            return user;
+        }
     }
 }

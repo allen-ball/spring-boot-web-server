@@ -67,11 +67,6 @@ public abstract class WebSecurityConfigurerImpl extends WebSecurityConfigurerAda
             web.ignoring().antMatchers(IGNORE);
         }
 
-        @Bean
-        public SessionRegistry sessionRegistry() {
-            return new SessionRegistryImpl();
-        }
-
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.antMatcher("/**")
@@ -93,6 +88,11 @@ public abstract class WebSecurityConfigurerImpl extends WebSecurityConfigurerAda
             }
 
             http.sessionManagement(t -> t.maximumSessions(-1).sessionRegistry(sessionRegistry()));
+        }
+
+        @Bean
+        public SessionRegistry sessionRegistry() {
+            return new SessionRegistryImpl();
         }
     }
 }
