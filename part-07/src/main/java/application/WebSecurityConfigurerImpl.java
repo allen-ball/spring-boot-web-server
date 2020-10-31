@@ -18,6 +18,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -59,6 +60,8 @@ public abstract class WebSecurityConfigurerImpl extends WebSecurityConfigurerAda
             "/css/**", "/js/**", "/images/**", "/webjars/**", "/webjarsjs"
         };
 
+        @Autowired private OidcUserService oidcUserService = null;
+
         @Override
         public void configure(WebSecurity web) {
             web.ignoring().antMatchers(IGNORE);
@@ -83,6 +86,7 @@ public abstract class WebSecurityConfigurerImpl extends WebSecurityConfigurerAda
 
                 if (repository != null) {
                     http.oauth2Login(t -> t.clientRegistrationRepository(repository)
+                                           .userInfoEndpoint(u -> u.oidcUserService(oidcUserService))
                                            .loginPage("/login").permitAll());
                 }
             } catch (Exception exception) {

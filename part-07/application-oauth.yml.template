@@ -7,6 +7,7 @@ spring:
           github:
             client-id: XXXXXXXXXXXXXXXXXXXX
             client-secret: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            scope: user:email
           okta:
             client-id: XXXXXXXXXXXXXXXXXXXX
             client-secret: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -14,3 +15,4 @@ spring:
         provider:
           okta:
             issuer-uri: https://DOMAIN.okta.com/oauth2/default
+            user-name-attribute: email

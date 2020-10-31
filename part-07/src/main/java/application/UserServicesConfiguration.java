@@ -16,17 +16,33 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 @NoArgsConstructor @ToString @Log4j2
-public class UserDetailsServiceConfiguration {
+public class UserServicesConfiguration {
     @Autowired private CredentialRepository credentialRepository = null;
     @Autowired private AuthorityRepository authorityRepository = null;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl();
+    }
+
+    @Bean
+    public OAuth2UserService<OAuth2UserRequest,OAuth2User> oauth2UserService() {
+        return new OAuth2UserServiceImpl();
+    }
+
+    @Bean
+    public OidcUserService oidcUserService() {
+        return new OidcUserServiceImpl();
     }
 
     @NoArgsConstructor @ToString
@@ -53,5 +69,24 @@ public class UserDetailsServiceConfiguration {
 
             return user;
         }
+    }
+
+    @NoArgsConstructor @ToString
+    private class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
+        private final DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
+
+        @Override
+        public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException {
+            OAuth2User user = delegate.loadUser(request);
+
+            log.info("{}", user);
+
+            return user;
+        }
+    }
+
+    @NoArgsConstructor @ToString
+    private class OidcUserServiceImpl extends OidcUserService {
+        { setOauth2UserService(oauth2UserService()); }
     }
 }
