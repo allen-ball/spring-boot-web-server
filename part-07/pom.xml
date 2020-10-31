@@ -18,7 +18,6 @@
     <license.licenseName>mit</license.licenseName>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <spring-security.version>5.4.1</spring-security.version>
   </properties>
   <profiles>
     <profile>
