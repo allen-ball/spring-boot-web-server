@@ -85,6 +85,7 @@ public class UserServicesConfiguration {
         private final DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
 
         @Override
+        @Transactional(readOnly = true)
         public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException {
             String attribute =
                 request.getClientRegistration().getProviderDetails()
@@ -113,6 +114,7 @@ public class UserServicesConfiguration {
         { setOauth2UserService(oAuth2UserService()); }
 
         @Override
+        @Transactional(readOnly = true)
         public OidcUser loadUser(OidcUserRequest request) throws OAuth2AuthenticationException {
             String attribute =
                 request.getClientRegistration().getProviderDetails()
