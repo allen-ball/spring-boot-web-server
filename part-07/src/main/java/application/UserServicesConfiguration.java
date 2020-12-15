@@ -1,6 +1,5 @@
 package application;
 
-import application.jpa.Authority;
 import application.jpa.AuthorityRepository;
 import application.jpa.Credential;
 import application.jpa.CredentialRepository;
@@ -59,14 +58,15 @@ public class UserServicesConfiguration {
             User user = null;
 
             try {
-                Optional<Credential> credential = credentialRepository.findById(username);
-                Optional<Authority> authority = authorityRepository.findById(username);
+                Credential credential =
+                    credentialRepository.findById(username)
+                    .orElseThrow(() -> new UsernameNotFoundException(username));
+                List<GrantedAuthority> authorities =
+                    authorityRepository.findById(username)
+                    .map(t -> t.getGrants().asGrantedAuthorityList())
+                    .orElse(AuthorityUtils.createAuthorityList());
 
-                user =
-                    new User(username,
-                             credential.get().getPassword(),
-                             authority.map(t -> t.getGrants().asGrantedAuthorityList())
-                             .orElse(AuthorityUtils.createAuthorityList()));
+                user = new User(username, credential.getPassword(), authorities);
             } catch (UsernameNotFoundException exception) {
                 throw exception;
             } catch (Exception exception) {
@@ -91,21 +91,12 @@ public class UserServicesConfiguration {
                 request.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
             OAuth2User user = delegate.loadUser(request);
+            List<GrantedAuthority> authorities =
+                authorityRepository.findById(user.getName())
+                .map(t -> t.getGrants().asGrantedAuthorityList())
+                .orElse(DEFAULT_AUTHORITIES);
 
-            try {
-                Optional<Authority> authority = authorityRepository.findById(user.getName());
-
-                user =
-                    new DefaultOAuth2User(authority.map(t -> t.getGrants().asGrantedAuthorityList())
-                                          .orElse(DEFAULT_AUTHORITIES),
-                                          user.getAttributes(), attribute);
-            } catch (OAuth2AuthenticationException exception) {
-                throw exception;
-            } catch (Exception exception) {
-                log.warn("{}", request, exception);
-            }
-
-            return user;
+            return new DefaultOAuth2User(authorities, user.getAttributes(), attribute);
         }
     }
 
@@ -120,21 +111,12 @@ public class UserServicesConfiguration {
                 request.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
             OidcUser user = super.loadUser(request);
+            List<GrantedAuthority> authorities =
+                authorityRepository.findById(user.getName())
+                .map(t -> t.getGrants().asGrantedAuthorityList())
+                .orElse(DEFAULT_AUTHORITIES);
 
-            try {
-                Optional<Authority> authority = authorityRepository.findById(user.getName());
-
-                user =
-                    new DefaultOidcUser(authority.map(t -> t.getGrants().asGrantedAuthorityList())
-                                        .orElse(DEFAULT_AUTHORITIES),
-                                        user.getIdToken(), user.getUserInfo(), attribute);
-            } catch (OAuth2AuthenticationException exception) {
-                throw exception;
-            } catch (Exception exception) {
-                log.warn("{}", request, exception);
-            }
-
-            return user;
+            return new DefaultOidcUser(authorities, user.getIdToken(), user.getUserInfo(), attribute);
         }
     }
 }
