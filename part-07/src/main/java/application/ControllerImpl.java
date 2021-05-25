@@ -137,7 +137,4 @@ public class ControllerImpl implements ErrorController {
 
     @Value("${server.error.path:${error.path:/error}}")
     private String errorPath = null;
-
-    @Deprecated @Override
-    public String getErrorPath() { return errorPath; }
 }
